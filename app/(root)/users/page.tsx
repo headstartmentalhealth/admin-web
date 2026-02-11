@@ -27,7 +27,7 @@ const Users = () => {
         <PageHeading title='Users' enableBreadCrumb={true} layer2='Users' />
         {/* Filter */}
         <Filter
-          searchPlaceholder='Search by subscription plans'
+          searchPlaceholder='Search by users'
           showPeriod={false}
           handleSearchSubmit={handleSearchSubmit}
           handleFilterByDateSubmit={handleFilterByDateSubmit}

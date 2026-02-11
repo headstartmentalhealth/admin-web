@@ -3,6 +3,9 @@ export interface Metrics {
   total_revenue: string;
   total_product_orders: number;
   total_withdrawals: number;
+  total_library_materials: number;
+  total_audio_contents: number;
+  total_blog_posts: number;
 }
 export interface MetricsResponse {
   statusCode: number;

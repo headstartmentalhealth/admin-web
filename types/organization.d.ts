@@ -47,7 +47,7 @@ export interface Business {
 
 export interface BusinessResponse {
   statusCode: number;
-  data: Business[];
+  data: BusinessProfileFull[];
   count: number;
 }
 
@@ -140,7 +140,7 @@ export interface BusinessDetails {
 export interface BusinessDetailsResponse {
   statusCode: number;
   message: string;
-  data: BusinessDetails;
+  data: BusinessProfileFull;
 }
 
 // KYC
@@ -181,6 +181,7 @@ export interface ContactRole {
 export interface ContactUser {
   id: string;
   role: ContactRole;
+  profile: UserProfile | null;
 }
 
 export interface ContactAccount {
@@ -269,4 +270,69 @@ export interface BusinessOwnerResponse {
   statusCode: number;
   data: BusinessOwner[];
   count: number;
+}
+
+
+export interface ContactInvite {
+  id: string; // UUID format
+  name: string;
+  email: string;
+  is_owner: boolean;
+  user: ContactUser | null;
+  business: BusinessProfile;
+  token: string | null;
+  status: ContactInviteStatus; // Assuming possible status values
+  expires_at: string | null; // ISO date string or null
+  created_at: string; // ISO date string
+}
+
+export interface ContactInviteResponse {
+  statusCode: number;
+  data: ContactInvite[];
+  count: number;
+}
+
+export interface ContactInviteDetailsResponse {
+  statusCode: number;
+  data: ContactInvite;
+}
+
+export interface UpdateOnboardingProcessResponse {
+  statusCode: number;
+  message: string;
+  data: OnboardProcess;
+}
+
+export interface BusinessProfileResponse {
+  statusCode: number;
+  data: BusinessProfileFull[];
+}
+
+export interface BusinessProfileFull {
+  id: string;
+  user_id: string;
+  business_name: string;
+  business_description: string;
+  business_slug: string;
+  social_media_handles: { handle: string; link: string }[];
+  business_size: 'small' | 'medium' | 'large' | string;
+  business_slug: string;
+  timeline: string;
+  logo_url: string;
+  industry: string;
+  working_hours: string | null;
+  location: string;
+  state: string | null;
+  country: string;
+  country_code: string;
+  created_at: string; // ISO 8601 format
+  updated_at: string; // ISO 8601 format
+  kyc: KYC[];
+  onboarding_status: {
+    onboard_processes: string[] | null;
+    current_step: number;
+    is_completed: boolean;
+  };
+  business_wallet: BusinessWallet[];
+  withdrawal_account: WithdrawalAccount;
 }

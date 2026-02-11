@@ -3,6 +3,7 @@ import { Dropdown, Avatar } from 'flowbite-react';
 import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import useProfile from '@/hooks/page/useProfile';
 
 const Profile = ({
   isOpen,
@@ -22,7 +23,7 @@ const Profile = ({
   const handleToggle = () =>
     setIsOpen({ profileDialog: !isOpen.profileDialog, appsDialog: false });
 
-  const { profile } = useSelector((state: RootState) => state.auth);
+  const { profile } = useProfile();
 
   return (
     <div>

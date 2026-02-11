@@ -7,6 +7,7 @@ import { capitalize } from 'lodash';
 import crypto from 'crypto';
 import { TicketTier } from '@/types/product';
 import Joi from 'joi';
+import { BusinessProfileFull } from '@/types/organization';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -578,12 +579,19 @@ export const formatMoney = (amount: number, currency = 'NGN'): string => {
 };
 
 const algorithm = 'aes-256-cbc';
-const secret = process.env.NEXT_PUBLIC_ENCRYPTION_KEY!; // Ensure this is exactly 32 characters
-const secretKey = crypto.createHash('sha256').update(secret).digest(); // Converts it to a 32-byte key
-const iv = crypto.randomBytes(16); // Initialization vector
+
+const getSecretKey = () => {
+    const secret = process.env.NEXT_PUBLIC_ENCRYPTION_KEY;
+    if (!secret) {
+        throw new Error('NEXT_PUBLIC_ENCRYPTION_KEY is not defined');
+    }
+    return crypto.createHash('sha256').update(secret).digest();
+}
 
 // Encrypt Function
 export const encryptInput = (input: string): string => {
+  const secretKey = getSecretKey();
+  const iv = crypto.randomBytes(16); // Initialization vector
   const cipher = crypto.createCipheriv(algorithm, secretKey, iv);
   let encrypted = cipher.update(input, 'utf8', 'hex');
   encrypted += cipher.final('hex');
@@ -592,7 +600,7 @@ export const encryptInput = (input: string): string => {
 
 // Check if input is an encrypted string
 export const isEncrypted = (input: string) => {
-  if (!input.includes(':')) return false; // Must have IV and encrypted text
+  if (!input || !input.includes(':')) return false; // Must have IV and encrypted text
   const [ivHex, encryptedText] = input.split(':');
   return ivHex.length === 32 && /^[a-f0-9]+$/.test(encryptedText); // IV should be 16 bytes (hex = 32 chars)
 };
@@ -604,6 +612,7 @@ export const decryptInput = (encryptedInput: string): string => {
   }
 
   try {
+    const secretKey = getSecretKey();
     const [ivHex, encrypted] = encryptedInput.split(':');
     const decipher = crypto.createDecipheriv(
       algorithm,
@@ -645,4 +654,38 @@ export enum ActionKind {
 
 export enum NotificationType {
   EMAIL = 'EMAIL',
+}
+
+export enum BusinessOwnerOrgRole {
+  USER = 'user',
+  BUSINESS_ADMIN = 'business-administrator',
+}
+
+export enum ContactInviteStatus {
+  ACTIVE = 'active',
+  SUSPENDED = 'suspended',
+  PENDING = 'pending',
+  EXPIRED = 'expired',
+}
+
+export enum OnboardingProcess {
+  BUSINESS_DETAILS = 'BUSINESS_DETAILS',
+  KYC = 'KYC',
+  WITHDRAWAL_ACCOUNT = 'WITHDRAWAL_ACCOUNT',
+  TEAM_MEMBERS_INVITATION = 'TEAM_MEMBERS_INVITATION',
+  PRODUCT_CREATION = 'PRODUCT_CREATION',
+}
+
+export const onboardingProcesses = (org: BusinessProfileFull) => {
+  return (org?.onboarding_status?.onboard_processes as string[]) ?? [];
+};
+
+export interface OnboardingStep {
+  id: number;
+  process: OnboardingProcess;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  action: string;
+  path?: string;
 }

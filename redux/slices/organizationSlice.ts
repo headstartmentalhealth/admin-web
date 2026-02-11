@@ -6,19 +6,25 @@ import {
   BusinessDetailsResponse,
   BusinessOwner,
   BusinessOwnerResponse,
+  BusinessProfileFull,
   BusinessResponse,
   ContactAccount,
+  ContactInvite,
+  ContactInviteDetailsResponse,
+  ContactInviteResponse,
   ContactResponse,
   Customer,
   CustomersResponse,
   KycResponse,
   KycType,
+  UpdateOnboardingProcessResponse,
 } from '@/types/organization';
-import { SystemRole } from '@/lib/utils';
+import { BusinessOwnerOrgRole, ContactInviteStatus, onboardingProcesses, SystemRole } from '@/lib/utils';
+import { AcceptInviteProps, InviteContactProps, UpdateOnboardingProcessProps } from '@/lib/schema/org.schema';
 
 interface OrganizationState {
-  organizations: Business[];
-  organization: BusinessDetails | null;
+  organizations: BusinessProfileFull[];
+  organization?: BusinessProfileFull | null;
   contacts: ContactAccount[];
   customers: Customer[];
   kyc: KycType[];
@@ -31,6 +37,12 @@ interface OrganizationState {
   kycActionLoading: boolean
   error: string | null;
   currentPage: number;
+
+  invites: ContactInvite[];
+  invite: ContactInvite | null;
+  invitesCount: number;
+  invitesLoading: boolean;
+  invitesError: string | null;
 }
 
 // Initial state
@@ -49,6 +61,12 @@ const initialState: OrganizationState = {
   kycActionLoading: false,
   error: null,
   currentPage: 1,
+
+  invites: [],
+  invite: null,
+  invitesCount: 0,
+  invitesLoading: false,
+  invitesError: null,
 };
 
 // Async thunk to fetch paginated organizations/businesses
@@ -182,7 +200,6 @@ export const reviewKYC = createAsyncThunk(
     }
   }
 );
-
 
 // Async thunk to fetch paginated organizations/businesses
 export const fetchContacts = createAsyncThunk(
@@ -398,6 +415,214 @@ export const fetchOrgOwners = createAsyncThunk(
   }
 );
 
+
+// Async thunk to invite team member
+export const inviteMember = createAsyncThunk(
+  'contact/invite',
+  async (credentials: InviteContactProps, { rejectWithValue }) => {
+    try {
+      const { data } = await api.post('/contact/invite', credentials);
+
+      return {
+        message: data.message,
+      };
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data || 'Failed to invite team member'
+      );
+    }
+  }
+);
+
+// Async thunk to reinvite team member
+export const reinviteMember = createAsyncThunk(
+  'contact/reinvite-member/:invite_id',
+  async ({ invite_id }: { invite_id: string }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.post(`/contact/reinvite-member/${invite_id}`);
+
+      return {
+        message: data.message,
+      };
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data || 'Failed to reinvite team member'
+      );
+    }
+  }
+);
+
+// Async thunk to accept invite
+export const acceptInvite = createAsyncThunk(
+  'contact/accept-invite',
+  async (credentials: AcceptInviteProps, { rejectWithValue }) => {
+    try {
+      const { data } = await api.post('/contact/accept-invite', credentials);
+
+      return {
+        message: data.message,
+      };
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || 'Failed to accept invite');
+    }
+  }
+);
+
+// Async thunk to fetch invites
+export const fetchInvites = createAsyncThunk(
+  'contact/invites/:business_id',
+  async (
+    {
+      page,
+      limit,
+      q,
+      startDate,
+      endDate,
+      business_id,
+      role,
+    }: {
+      page?: number;
+      limit?: number;
+      q?: string;
+      startDate?: string;
+      endDate?: string;
+      business_id?: string;
+      role?: BusinessOwnerOrgRole;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const params: Record<string, any> = {};
+
+      if (page !== undefined) params['pagination[page]'] = page;
+      if (role !== undefined) params['role'] = role;
+      if (limit !== undefined) params['pagination[limit]'] = limit;
+      if (q !== undefined) params.q = q;
+      if (startDate !== undefined) params.startDate = startDate;
+      if (endDate !== undefined) params.endDate = endDate;
+
+      const headers: Record<string, string> = {};
+      if (business_id) headers['Business-Id'] = business_id;
+
+      const { data } = await api.get<ContactInviteResponse>(
+        `/contact/invites/${business_id}`,
+        {
+          params,
+          headers,
+        }
+      );
+
+      return {
+        invites: data.data,
+        count: data.count,
+      };
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || 'Failed to fetch invites');
+    }
+  }
+);
+
+// Async thunk to view invite by token
+export const viewInviteByToken = createAsyncThunk(
+  'contact/invite/:token',
+  async ({ token }: { token: string }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.get<ContactInviteDetailsResponse>(
+        `/contact/invite/${token}`
+      );
+
+      return {
+        data: data.data,
+      };
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || 'Failed to view invite');
+    }
+  }
+);
+
+// Async thunk to remove member
+export const removeMember = createAsyncThunk(
+  'contact/remove-member/:invite_id',
+  async ({ invite_id }: { invite_id: string }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.post(`/contact/remove-member/${invite_id}`);
+
+      return {
+        message: data.message,
+      };
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || 'Failed to remove member');
+    }
+  }
+);
+
+// Async thunk to deactivate member
+export const deactivateMember = createAsyncThunk(
+  'contact/deactivate-member/:invite_id',
+  async ({ invite_id }: { invite_id: string }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.post(
+        `/contact/deactivate-member/${invite_id}`
+      );
+
+      return {
+        message: data.message,
+      };
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data || 'Failed to deactivate member'
+      );
+    }
+  }
+);
+
+// Async thunk to update onboarding process
+export const updateOnboardingProcess = createAsyncThunk(
+  'onboard/update-onboarding-process',
+  async (
+    { business_id, process }: UpdateOnboardingProcessProps,
+    { rejectWithValue }
+  ) => {
+    try {
+      const headers: Record<string, any> = {};
+
+      if (business_id !== undefined) headers['Business-Id'] = business_id;
+
+      const { data } = await api.patch<UpdateOnboardingProcessResponse>(
+        '/onboard/update-onboarding-process',
+        { process },
+        {
+          headers,
+        }
+      );
+
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data || 'Failed to update onboarding process'
+      );
+    }
+  }
+);
+
+// Async thunk to restore member
+export const restoreMember = createAsyncThunk(
+  'contact/restore-member/:invite_id',
+  async ({ invite_id }: { invite_id: string }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.post(`/contact/restore-member/${invite_id}`);
+
+      return {
+        message: data.message,
+      };
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data || 'Failed to restore member'
+      );
+    }
+  }
+);
+
 const organizationSlice = createSlice({
   name: 'organizations',
   initialState,
@@ -410,7 +635,7 @@ const organizationSlice = createSlice({
     },
     updateOrganization: (
       state,
-      action: PayloadAction<Partial<BusinessDetails>>
+      action: PayloadAction<Partial<BusinessProfileFull>>
     ) => {
       if (state.organization) {
         state.organization = {
@@ -419,6 +644,53 @@ const organizationSlice = createSlice({
         };
       }
     },
+    setOnboardingStep: (state, action: PayloadAction<number>) => {
+      if (state.organization?.onboarding_status) {
+        state.organization.onboarding_status.current_step = action.payload;
+      }
+    },
+    switchToOrg: (
+      state,
+      action: PayloadAction<UpdateOnboardingProcessProps>,
+    ) => {
+      const { business_id: orgId, process } = action.payload;
+
+      const matchedOrg = state.organizations.find((org) => org.id === orgId);
+
+      if (matchedOrg) {
+        state.organization = {
+          ...matchedOrg,
+          onboarding_status: {
+            ...matchedOrg.onboarding_status,
+            ...(process && {
+              onboard_processes: Array.from(
+                new Set([...onboardingProcesses(state.organization!), process]),
+              ),
+            }),
+          },
+        } as BusinessProfileFull | any;
+      } else {
+        state.error = 'Organization not found in local state';
+      }
+    },
+    clearOrg: (state) => {
+      state.organization = null;
+    },
+    viewInvite: (state, action: PayloadAction<string>) => {
+      const inviteId = action.payload;
+      const matchedInvite = state.invites.find(
+        (invite) => invite.id === inviteId
+      );
+
+      if (matchedInvite) {
+        state.invite = {
+          ...matchedInvite,
+        } as ContactInvite;
+      } else {
+        state.error = 'Invite not found in local state';
+      }
+    },
+    
   },
   extraReducers: (builder) => {
     builder
@@ -529,10 +801,110 @@ const organizationSlice = createSlice({
       state.loading = false;
       state.error =
         action.error.message || 'Failed to fetch organization owners';
-    });
+    })
+    // Team management
+      .addCase(inviteMember.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(inviteMember.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(inviteMember.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to invite team member';
+      })
+      .addCase(reinviteMember.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(reinviteMember.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(reinviteMember.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to reinvite team member';
+      })
+      .addCase(acceptInvite.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(acceptInvite.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(acceptInvite.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to accept invite';
+      })
+      .addCase(fetchInvites.pending, (state) => {
+        state.invitesLoading = true;
+        state.invitesError = null;
+      })
+      .addCase(fetchInvites.fulfilled, (state, action) => {
+        state.invitesLoading = false;
+        state.invites = action.payload.invites;
+        state.invitesCount = action.payload.count;
+      })
+      .addCase(fetchInvites.rejected, (state, action) => {
+        state.invitesLoading = false;
+        state.invitesError = action.error.message || 'Failed to fetch invites';
+      })
+      .addCase(viewInviteByToken.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(viewInviteByToken.fulfilled, (state, action) => {
+        state.loading = false;
+        state.invite = action.payload.data;
+      })
+      .addCase(viewInviteByToken.rejected, (state, action) => {
+        state.loading = false;
+        state.error = 'Failed to fetch invite';
+      })
+      .addCase(removeMember.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(removeMember.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(removeMember.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to remove member';
+      })
+      .addCase(deactivateMember.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deactivateMember.fulfilled, (state, action) => {
+        state.loading = false;
+        state.invite = {
+          ...state.invite!,
+          status: ContactInviteStatus.SUSPENDED,
+        };
+      })
+      .addCase(deactivateMember.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to deactivate member';
+      })
+      .addCase(restoreMember.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(restoreMember.fulfilled, (state, action) => {
+        state.loading = false;
+        state.invite = {
+          ...state.invite!,
+          status: ContactInviteStatus.ACTIVE,
+        };
+      })
+      .addCase(restoreMember.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to restore member';
+      });
 },
 });
 
-export const { setPage, setPerPage, updateOrganization } =
+export const { setPage, setPerPage, updateOrganization, setOnboardingStep, switchToOrg, clearOrg, viewInvite } =
   organizationSlice.actions;
 export default organizationSlice.reducer;

@@ -11,6 +11,9 @@ import subscriptionPlanReducer from './slices/subscriptionPlanSlice';
 import multimediaReducer from './slices/multimediaSlice';
 import notificationReducer from './slices/notificationSlice';
 import analyticsReducer from './slices/analyticsSlice';
+import userReducer from './slices/userSlice';
+import resourceReducer from './slices/resourceSlice';
+import blogPostReducer from './slices/blogPostSlice';
 import storage from 'redux-persist/lib/storage'; // Uses localStorage
 import { persistReducer } from 'redux-persist';
 
@@ -18,23 +21,26 @@ import { persistReducer } from 'redux-persist';
 const persistConfig = {
   key: 'auth',
   storage,
-  whitelist: ['auth'], // Only persist the auth slice
+  whitelist: ['auth', 'organization'], // Only persist the auth slice
 };
 
 // Combine reducers
 const rootReducer = combineReducers({
   auth: persistReducer(persistConfig, authReducer),
+  user: userReducer,
   product: productReducer, // Not persisted
   payment: paymentReducer, // Not persisted
   withdrawal: withdrawalReducer,
   log: logReducer, // Not persisted
-  organization: organizationReducer, // Not persisted
+  organization: persistReducer(persistConfig, organizationReducer), // Not persisted
   coupon: couponReducer, // Not persisted
   cart: cartReducer, // Not persisted
   subscriptionPlan: subscriptionPlanReducer, // Not persisted
   multimedia: multimediaReducer, // Not persisted
   notification: notificationReducer, // Not persisted
   analytics: analyticsReducer, // Not persisted
+  resource: resourceReducer, // Not persisted
+  blogPost: blogPostReducer, // Not persisted
 });
 
 export const store = configureStore({

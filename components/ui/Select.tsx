@@ -14,18 +14,24 @@ const Select = ({
     <>
       <select
         id={name}
-        defaultValue={data[0]}
+        defaultValue={typeof data[0] === 'string' ? data[0] : data[0]?.value}
         className={className}
         value={value}
         onChange={onChange}
         required={required}
         multiple={multiple}
       >
-        {data.map((value) => (
-          <option key={value} value={value}>
-            {value === '*' ? 'All' : capitalize(value)}
-          </option>
-        ))}
+        {data.map((item) => {
+          const itemValue = typeof item === 'string' ? item : item.value;
+          const itemLabel = typeof item === 'string'
+            ? (item === '*' ? 'All' : capitalize(item))
+            : item.label;
+          return (
+            <option key={itemValue} value={itemValue}>
+              {itemLabel}
+            </option>
+          );
+        })}
       </select>
     </>
   );

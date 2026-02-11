@@ -8,7 +8,7 @@ import ReduxProvider from '@/redux/redux-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'Headstart Admin',
+  title: 'HeadStart Connect Admin',
   description: '',
   icons: {
     icon: '/icons/icon.png',
@@ -30,16 +30,18 @@ export default function RootLayout({
   return (
     <ReduxProvider>
       <html lang='en' className={dmSans.variable}>
-        <ConfettiProvider />
-        <ToastProvider />
-        <ThemeProvider
-          attribute='class'
-          defaultTheme='system'
-          enableSystem
-          disableTransitionOnChange
-        >
-          <body className={dmSans.className}>{children}</body>
-        </ThemeProvider>
+        <body className={dmSans.className}>
+          <ConfettiProvider />
+          <ToastProvider />
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='system'
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </body>
       </html>
     </ReduxProvider>
   );

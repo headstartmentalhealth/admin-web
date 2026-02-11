@@ -3,29 +3,38 @@
 import DoughnutChart from '@/components/DoughnutChart';
 import AnalyticsChart from '@/components/landing/AnalyticsChart';
 import useMetrics from '@/hooks/page/useMetrics';
+import useOrgs from '@/hooks/page/useOrgs';
 import useProductCount from '@/hooks/page/useProductCount';
 import useRevenue from '@/hooks/page/useRevenue';
-import React from 'react';
+import { switchToOrg } from '@/redux/slices/organizationSlice';
+import { AppDispatch, RootState } from '@/redux/store';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Home = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const { metrics, metricsLoading } = useMetrics();
   const { revenue, revenuesLoading } = useRevenue();
   const { productCount, productCountLoading } = useProductCount();
 
+  const { organizations: orgs, loading: orgLoading } = useOrgs();
+  const { organization: org } = useSelector((state: RootState) => state.organization);
+
   // Prepare the data for the doughnut chart
   const doughnutData = productCount
     ? [
-        {
-          type: 'Courses',
-          count: productCount.course,
-          color: '#A78BFA',
-        },
-        {
-          type: 'Tickets',
-          count: productCount.ticket,
-          color: '#F59E0B',
-        },
-      ]
+      {
+        type: 'Courses',
+        count: productCount.course,
+        color: '#A78BFA',
+      },
+      {
+        type: 'Tickets',
+        count: productCount.ticket,
+        color: '#F59E0B',
+      },
+    ]
     : [];
 
   // Shimmer loading component
@@ -34,6 +43,17 @@ const Home = () => {
       className={`animate-pulse bg-gray-200 dark:bg-gray-700 rounded ${className}`}
     ></div>
   );
+
+  const handleSelectOrg = (orgId: string) => {
+    dispatch(switchToOrg({ business_id: orgId }));
+  };
+
+  useEffect(() => {
+    // Show org selection modal if no org is selected
+    if (!org && orgs.length > 0) {
+      handleSelectOrg(orgs[0].id);
+    }
+  }, [org, orgs]);
 
   return (
     <main className='section-container'>
@@ -56,15 +76,19 @@ const Home = () => {
                 value: metrics?.total_organizations,
                 change: '',
               },
-              { label: 'Library Materials', value: 0, change: '' },
               {
-                label: 'Audio Contents',
-                value: 0,
+                label: 'Library Materials',
+                value: metrics?.total_library_materials || 0,
                 change: '',
               },
               {
-                label: 'Posts',
-                value: 0,
+                label: 'Audio Contents',
+                value: metrics?.total_audio_contents || 0,
+                change: '',
+              },
+              {
+                label: 'Blog Posts',
+                value: metrics?.total_blog_posts || 0,
                 change: '',
               },
             ].map((stat, index) => (

@@ -1,21 +1,22 @@
-import { fetchUsers } from '@/redux/slices/userSlice';
 import { AppDispatch, RootState } from '@/redux/store';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useQueryParams from '../useQueryParams';
-import { useParams } from 'next/navigation';
-import { SystemRole } from '@/lib/utils';
+import { fetchInvites } from '@/redux/slices/organizationSlice';
+import { BusinessOwnerOrgRole } from '@/lib/utils';
 
-interface UseCustomersProps {
-  role?: SystemRole;
-}
-const useCustomers = ({ role }: UseCustomersProps = {}) => {
+const useInvites = (
+  role: BusinessOwnerOrgRole = BusinessOwnerOrgRole.BUSINESS_ADMIN
+) => {
   const dispatch = useDispatch<AppDispatch>();
-  const params = useParams();
 
-  let { users, loading, count } = useSelector(
-    (state: RootState) => state.user
-  );
+  const {
+    invites,
+    invitesLoading: loading,
+    invitesError: error,
+    invitesCount: count,
+  } = useSelector((state: RootState) => state.organization);
+  const { organization: org } = useSelector((state: RootState) => state.organization);
 
   const {
     currentPage,
@@ -28,30 +29,27 @@ const useCustomers = ({ role }: UseCustomersProps = {}) => {
     handleSearchSubmit,
     handleFilterByDateSubmit,
     handleRefresh,
-  } = useQueryParams(users);
+  } = useQueryParams(invites);
 
   useEffect(() => {
     dispatch(
-      fetchUsers({
+      fetchInvites({
         page: currentPage,
         limit: perPage,
         ...(q && { q }),
-        ...(role && { role }),
         ...(startDate && { startDate }),
         ...(endDate && { endDate }),
-        ...(params?.id && { business_id: params?.id as string }),
+        ...(org?.id && { business_id: org.id }),
+        ...(role && { role }),
       })
-    );
-  }, [dispatch, currentPage, perPage, q, role, startDate, endDate]);
+    ).unwrap();
+  }, [dispatch, currentPage, perPage, q, startDate, endDate, org]);
 
   return {
-    customers: users,
-    loading,
+    invites,
     count,
-    currentPage,
-    q,
-    startDate,
-    endDate,
+    loading,
+    error,
     onClickNext,
     onClickPrev,
     handleSearchSubmit,
@@ -60,4 +58,4 @@ const useCustomers = ({ role }: UseCustomersProps = {}) => {
   };
 };
 
-export default useCustomers;
+export default useInvites;
