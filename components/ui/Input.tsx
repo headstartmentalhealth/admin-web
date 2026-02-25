@@ -11,6 +11,8 @@ const Input = ({
   defaultValue,
   required,
   readonly = false,
+  min,
+  max,
 }: InputProps) => {
   return (
     <>
@@ -24,6 +26,8 @@ const Input = ({
         onChange={onChange}
         value={value}
         required={required}
+        min={min}
+        max={max}
         {...(readonly ? { readOnly: true } : {})}
       />
     </>

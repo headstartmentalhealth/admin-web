@@ -676,7 +676,7 @@ export enum OnboardingProcess {
   PRODUCT_CREATION = 'PRODUCT_CREATION',
 }
 
-export const onboardingProcesses = (org: BusinessProfileFull) => {
+export const onboardingProcesses = (org: any) => {
   return (org?.onboarding_status?.onboard_processes as string[]) ?? [];
 };
 

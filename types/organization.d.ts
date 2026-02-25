@@ -31,7 +31,7 @@ export interface Business {
   id: string;
   user_id: string;
   business_name: string;
-  business_size: 'small' | 'medium' | 'large';
+  business_size: 'small' | 'medium' | 'large' | string;
   timeline: string;
   logo_url: string;
   industry: string;
@@ -140,7 +140,7 @@ export interface BusinessDetails {
 export interface BusinessDetailsResponse {
   statusCode: number;
   message: string;
-  data: BusinessProfileFull;
+  data: BusinessDetails;
 }
 
 // KYC
@@ -327,6 +327,7 @@ export interface BusinessProfileFull {
   country_code: string;
   created_at: string; // ISO 8601 format
   updated_at: string; // ISO 8601 format
+  user: User;
   kyc: KYC[];
   onboarding_status: {
     onboard_processes: string[] | null;

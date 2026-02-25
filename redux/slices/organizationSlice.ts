@@ -24,7 +24,7 @@ import { AcceptInviteProps, InviteContactProps, UpdateOnboardingProcessProps } f
 
 interface OrganizationState {
   organizations: BusinessProfileFull[];
-  organization?: BusinessProfileFull | null;
+  organization?: BusinessDetails | null;
   contacts: ContactAccount[];
   customers: Customer[];
   kyc: KycType[];
@@ -635,7 +635,7 @@ const organizationSlice = createSlice({
     },
     updateOrganization: (
       state,
-      action: PayloadAction<Partial<BusinessProfileFull>>
+      action: PayloadAction<Partial<BusinessDetails>>
     ) => {
       if (state.organization) {
         state.organization = {
@@ -668,7 +668,7 @@ const organizationSlice = createSlice({
               ),
             }),
           },
-        } as BusinessProfileFull | any;
+        } as BusinessDetails | any;
       } else {
         state.error = 'Organization not found in local state';
       }

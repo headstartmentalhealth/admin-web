@@ -6,20 +6,22 @@ declare type InputProps = {
   name: string;
   placeholder?: string;
   className?: string;
-  defaultValue?: string;
+  defaultValue?: string | number;
   required?: boolean;
-  value?: string;
+  value?: string | number;
   onChange?: any;
   readonly?: boolean;
+  min?: string | number;
+  max?: string | number;
 };
 
 declare type SelectProps = {
   name: string;
-  defaultValue?: string;
+  defaultValue?: string | number;
   className?: string;
-  data: (string | { label: string; value: string })[];
+  data: (string | { label: string; value: string | number })[];
   required?: boolean;
-  value?: string | string[];
+  value?: string | number | readonly string[] | undefined;
   onChange?: any;
   multiple?: boolean;
 };

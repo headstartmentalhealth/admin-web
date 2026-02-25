@@ -2,7 +2,7 @@ import { AppDispatch, RootState } from '@/redux/store';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'next/navigation';
-import { viewInviteByToken } from '@/redux/slices/orgSlice';
+import { viewInviteByToken } from '@/redux/slices/organizationSlice';
 
 const useInvite = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -11,7 +11,7 @@ const useInvite = () => {
   const [errorMsg, setErrorMsg] = useState();
 
   const { invite, loading, error } = useSelector(
-    (state: RootState) => state.org
+    (state: RootState) => state.organization
   );
 
   useEffect(() => {

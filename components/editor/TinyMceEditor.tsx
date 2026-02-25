@@ -19,7 +19,7 @@ const TinyMceEditor = ({
 }: TinyMceEditorProps) => {
   const editorRef = useRef(null);
   const { theme, isMounted } = useTheme();
-  const { org: organization } = useSelector((state: RootState) => state.org);
+  const { organization } = useSelector((state: RootState) => state.organization);
 
   // if (!isMounted) return null; // wait until theme is resolved
   if (!isMounted) {
@@ -34,8 +34,7 @@ const TinyMceEditor = ({
 
   const additional_css =
     isEmailTemplate &&
-    `background: url("${
-      organization?.logo_url || '/default-logo.png'
+    `background: url("${organization?.logo_url || '/default-logo.png'
     }") no-repeat center;
   background-size: 70px auto;
   padding: 10px;
