@@ -1,6 +1,8 @@
 'use client';
 
-const SectionHeading = ({ title }: { title?: string | JSX.Element }) => {
+import React from 'react';
+
+const SectionHeading = ({ title }: { title?: React.ReactNode }) => {
   return (
     <>
       {title && (

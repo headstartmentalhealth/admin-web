@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Modal } from 'flowbite-react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 const ActionConfirmation = ({
@@ -9,7 +9,7 @@ const ActionConfirmation = ({
   body,
   className,
 }: {
-  action: string | JSX.Element;
+  action: React.ReactNode;
   body: string;
   className: string;
 }) => {

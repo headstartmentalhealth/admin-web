@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import Link from 'next/link';
 import { Button } from './ui/Button';
 import { IoIosArrowBack } from 'react-icons/io';
@@ -29,8 +30,8 @@ const PageHeading = ({
   ctaButtons,
   enableBreadCrumbStyle,
 }: {
-  title?: string | JSX.Element;
-  brief?: string | JSX.Element;
+  title?: React.ReactNode;
+  brief?: React.ReactNode;
   enableBreadCrumb?: boolean;
   layer1?: string;
   layer2?: string;
@@ -40,7 +41,7 @@ const PageHeading = ({
   layer3Link?: string;
   layer4Link?: string;
   enableBackButton?: boolean;
-  ctaButtons?: JSX.Element | undefined;
+  ctaButtons?: React.ReactNode;
   enableBreadCrumbStyle?: false;
 }) => {
   const router = useRouter();

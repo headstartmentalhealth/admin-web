@@ -20,7 +20,7 @@ const Filter = ({
   handleRefresh,
 }: {
   pageTitle?: string;
-  extra?: JSX.Element;
+  extra?: React.ReactNode;
   showSearch?: boolean;
   searchPlaceholder?: string;
   showPeriod?: boolean;
