@@ -14,38 +14,63 @@ import analyticsReducer from './slices/analyticsSlice';
 import userReducer from './slices/userSlice';
 import resourceReducer from './slices/resourceSlice';
 import blogPostReducer from './slices/blogPostSlice';
-import storage from 'redux-persist/lib/storage'; // Uses localStorage
 import { persistReducer } from 'redux-persist';
+import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
+
+// SSR-safe storage: falls back to noop on the server where localStorage is unavailable
+function createNoopStorage() {
+  return {
+    getItem: (_key: string) => Promise.resolve(null),
+    setItem: (_key: string, value: unknown) => Promise.resolve(value),
+    removeItem: (_key: string) => Promise.resolve(),
+  };
+}
+
+const storage =
+  typeof window !== 'undefined'
+    ? createWebStorage('local')
+    : createNoopStorage();
 
 // Persist configuration for auth slice only
-const persistConfig = {
+const authPersistConfig = {
   key: 'auth',
   storage,
-  whitelist: ['auth', 'organization'], // Only persist the auth slice
+};
+
+const orgPersistConfig = {
+  key: 'organization',
+  storage,
 };
 
 // Combine reducers
 const rootReducer = combineReducers({
-  auth: persistReducer(persistConfig, authReducer),
+  auth: persistReducer(authPersistConfig, authReducer),
   user: userReducer,
-  product: productReducer, // Not persisted
-  payment: paymentReducer, // Not persisted
+  product: productReducer,
+  payment: paymentReducer,
   withdrawal: withdrawalReducer,
-  log: logReducer, // Not persisted
-  organization: persistReducer(persistConfig, organizationReducer), // Not persisted
-  coupon: couponReducer, // Not persisted
-  cart: cartReducer, // Not persisted
-  subscriptionPlan: subscriptionPlanReducer, // Not persisted
-  multimedia: multimediaReducer, // Not persisted
-  notification: notificationReducer, // Not persisted
-  analytics: analyticsReducer, // Not persisted
-  resource: resourceReducer, // Not persisted
-  blogPost: blogPostReducer, // Not persisted
+  log: logReducer,
+  organization: persistReducer(orgPersistConfig, organizationReducer),
+  coupon: couponReducer,
+  cart: cartReducer,
+  subscriptionPlan: subscriptionPlanReducer,
+  multimedia: multimediaReducer,
+  notification: notificationReducer,
+  analytics: analyticsReducer,
+  resource: resourceReducer,
+  blogPost: blogPostReducer,
 });
 
 export const store = configureStore({
   reducer: rootReducer,
   devTools: process.env.NODE_ENV !== 'production',
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        // redux-persist dispatches actions with function values — ignore them
+        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/PAUSE', 'persist/PURGE', 'persist/FLUSH', 'persist/REGISTER'],
+      },
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

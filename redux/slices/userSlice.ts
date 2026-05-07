@@ -8,6 +8,7 @@ import { SystemRole } from '@/lib/utils';
 
 interface UserState {
   users: Customer[];
+  selectedUser: Customer | null;
   count: number;
   loading: boolean;
   error: string | null;
@@ -17,6 +18,7 @@ interface UserState {
 // Initial state
 const initialState: UserState = {
   users: [],
+  selectedUser: null,
   count: 0,
   loading: false,
   error: null,
@@ -76,6 +78,48 @@ export const fetchUsers = createAsyncThunk(
   }
 );
 
+// Async thunk to fetch single user detail
+export const fetchUserDetail = createAsyncThunk(
+  'users/fetchUserDetail',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const { data } = await api.get<{ data: Customer }>(
+        `/contact/fetch-customer/${id}`
+      );
+      return data.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to fetch user details'
+      );
+    }
+  }
+);
+
+// Async thunk to review KYC
+export const reviewKycAction = createAsyncThunk(
+  'users/reviewKyc',
+  async (
+    {
+      kyc_id,
+      is_approved,
+      disapproval_reason,
+    }: { kyc_id: string; is_approved: boolean; disapproval_reason?: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const { data } = await api.patch(`/onboard/review-kyc/${kyc_id}`, {
+        is_approved,
+        disapproval_reason,
+      });
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to review KYC'
+      );
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: 'users',
   initialState,
@@ -85,6 +129,7 @@ const userSlice = createSlice({
     },
     clearUserState: (state) => {
       state.users = [];
+      state.selectedUser = null;
       state.count = 0;
       state.loading = false;
       state.error = null;
@@ -103,6 +148,18 @@ const userSlice = createSlice({
         state.count = action.payload.count;
       })
       .addCase(fetchUsers.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(fetchUserDetail.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUserDetail.fulfilled, (state, action) => {
+        state.loading = false;
+        state.selectedUser = action.payload;
+      })
+      .addCase(fetchUserDetail.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

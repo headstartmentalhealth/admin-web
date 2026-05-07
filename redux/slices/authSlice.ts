@@ -42,6 +42,19 @@ export const login = createAsyncThunk(
   }
 );
 
+// Async Thunk to resend OTP (only email required)
+export const resendOtp = createAsyncThunk(
+  'auth/resend-otp',
+  async (credentials: { email: string }, { rejectWithValue }) => {
+    try {
+      const response = await api.post('/auth/resend-otp', credentials);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || 'Failed to resend OTP');
+    }
+  }
+);
+
 // Async Thunk for verify login
 export const verifyLogin = createAsyncThunk(
   'auth/verify-otp',

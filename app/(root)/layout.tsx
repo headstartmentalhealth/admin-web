@@ -3,7 +3,7 @@
 import Bar from '@/components/bar/Index';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/redux/store';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function RootLayout({
@@ -13,14 +13,15 @@ export default function RootLayout({
 }>) {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  const { user, loading, error, token } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const { token } = useSelector((state: RootState) => state.auth);
 
-  if (!token) {
-    return router.push('/sign-in');
-    
-  }
+  useEffect(() => {
+    if (!token) {
+      router.push('/sign-in');
+    }
+  }, [token, router]);
+
+  if (!token) return null;
 
   return (
     <main className='flex h-screen w-full font-inter'>

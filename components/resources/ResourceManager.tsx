@@ -37,6 +37,7 @@ const ResourceManager: React.FC<ResourceManagerProps> = ({ type, title }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [formData, setFormData] = useState({
     title: '',
+    author: '',
     description: '',
     content_url: '',
     cover_image: '',
@@ -58,6 +59,7 @@ const ResourceManager: React.FC<ResourceManagerProps> = ({ type, title }) => {
       setEditingResource(resource);
       setFormData({
         title: resource.title,
+        author: resource.author || '',
         description: resource.description || '',
         content_url: resource.content_url || '',
         cover_image: resource.cover_image || '',
@@ -70,6 +72,7 @@ const ResourceManager: React.FC<ResourceManagerProps> = ({ type, title }) => {
       setEditingResource(null);
       setFormData({
         title: '',
+        author: '',
         description: '',
         content_url: '',
         cover_image: '',
@@ -168,10 +171,12 @@ const ResourceManager: React.FC<ResourceManagerProps> = ({ type, title }) => {
                 <tr className="border-b border-zinc-100 dark:border-zinc-800">
                   <th className="p-4 font-semibold text-zinc-600 dark:text-zinc-400">Cover</th>
                   <th className="p-4 font-semibold text-zinc-600 dark:text-zinc-400">Title</th>
+                  <th className="p-4 font-semibold text-zinc-600 dark:text-zinc-400">Author</th>
                   <th className="p-4 font-semibold text-zinc-600 dark:text-zinc-400">Category</th>
                   <th className="p-4 font-semibold text-zinc-600 dark:text-zinc-400">Topic</th>
                   <th className="p-4 font-semibold text-zinc-600 dark:text-zinc-400 text-center">Age</th>
                   <th className="p-4 font-semibold text-zinc-600 dark:text-zinc-400 text-center">Mins</th>
+                  <th className="p-4 font-semibold text-zinc-600 dark:text-zinc-400">Date</th>
                   <th className="p-4 font-semibold text-zinc-600 dark:text-zinc-400 text-right">Actions</th>
                 </tr>
               </thead>
@@ -203,6 +208,9 @@ const ResourceManager: React.FC<ResourceManagerProps> = ({ type, title }) => {
                         </div>
                       </td>
                       <td className="p-4">
+                        <div className="text-sm text-zinc-600 dark:text-zinc-400">{resource.author || 'N/A'}</div>
+                      </td>
+                      <td className="p-4">
                         <span className="px-2 py-1 rounded-full text-xs bg-primary/10 text-primary font-medium">
                           {resource.category || '-'}
                         </span>
@@ -220,6 +228,9 @@ const ResourceManager: React.FC<ResourceManagerProps> = ({ type, title }) => {
                           <Clock className="w-3 h-3" />
                           {resource.minutes || 0}
                         </div>
+                      </td>
+                      <td className="p-4 whitespace-nowrap text-sm text-zinc-500">
+                        {new Date(resource.created_at).toLocaleDateString()}
                       </td>
                       <td className="p-4 text-right space-x-2">
                         <Button variant="ghost" size="icon" onClick={() => handleOpenModal(resource)}>
@@ -244,17 +255,30 @@ const ResourceManager: React.FC<ResourceManagerProps> = ({ type, title }) => {
         title={editingResource ? `Edit ${title}` : `Add ${title}`}
       >
         <form onSubmit={handleSubmit} className="space-y-4 pt-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Title</label>
-            <Input
-              required
-              name="title"
-              type="text"
-              value={formData.title}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, title: e.target.value })}
-              placeholder="Enter title"
-              className="w-full px-4 py-2.5 bg-white dark:bg-gray-900 border border-zinc-200 dark:border-gray-800 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm text-zinc-900 dark:text-gray-100 placeholder:text-zinc-400 dark:placeholder:text-gray-500"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Title</label>
+              <Input
+                required
+                name="title"
+                type="text"
+                value={formData.title}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, title: e.target.value })}
+                placeholder="Enter title"
+                className="w-full px-4 py-2.5 bg-white dark:bg-gray-900 border border-zinc-200 dark:border-gray-800 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm text-zinc-900 dark:text-gray-100 placeholder:text-zinc-400 dark:placeholder:text-gray-500"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Author</label>
+              <Input
+                name="author"
+                type="text"
+                value={formData.author}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, author: e.target.value })}
+                placeholder="Enter author name"
+                className="w-full px-4 py-2.5 bg-white dark:bg-gray-900 border border-zinc-200 dark:border-gray-800 rounded-2xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm text-zinc-900 dark:text-gray-100 placeholder:text-zinc-400 dark:placeholder:text-gray-500"
+              />
+            </div>
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">Description</label>

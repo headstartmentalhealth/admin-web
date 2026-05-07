@@ -15,4 +15,20 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      if (typeof window !== 'undefined') {
+        Cookies.remove('token');
+        // Redirect to signin if not already there
+        if (!window.location.pathname.includes('/signin')) {
+          window.location.href = '/signin';
+        }
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;

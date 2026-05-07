@@ -6,6 +6,7 @@ import { ConfettiProvider } from '@/components/providers/confetti-provider';
 
 import ReduxProvider from '@/redux/redux-provider';
 import { ThemeProvider } from '@/components/theme-provider';
+import { TokenValidator } from '@/components/auth/token-validator';
 
 export const metadata: Metadata = {
   title: 'HeadStart Connect Admin',
@@ -39,6 +40,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <TokenValidator />
             {children}
           </ThemeProvider>
         </body>

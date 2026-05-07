@@ -3,6 +3,7 @@ export type ResourceType = 'AFFIRMATIVE' | 'LIBRARY' | 'PODCAST';
 export interface Resource {
   id: string;
   title: string;
+  author: string | null;
   description: string | null;
   resource_type: ResourceType;
   content_url: string | null;

@@ -74,12 +74,12 @@ const CustomerItem = ({ customer }: CustomerItemProps) => {
           scope='row'
           className='px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white font-bold relative group'
         >
-          <button
+          <Link
+            href={`/users/${customer.id}`}
             className='hover:text-primary-400'
-            onClick={() => setIsDrawerOpen(true)}
           >
             {shortenId(customer.id)}
-          </button>
+          </Link>
 
           {/* Show Product Image on Hover */}
           <div className='absolute left-20 mt-2 w-[50] object-contain bg-white border rounded-lg shadow-lg hidden group-hover:block z-20'>
@@ -164,6 +164,14 @@ dark:text-white'
               <strong>Created At:</strong>{' '}
               {moment(customer.created_at).format('MMMM D, YYYY')}
             </p>
+            <div className='mt-6'>
+              <Link 
+                href={`/users/${customer.id}`}
+                className='w-full block text-center bg-primary-main text-white py-2 rounded-lg hover:bg-primary-dark transition-colors'
+              >
+                View Full Profile & KYC
+              </Link>
+            </div>
             <div>{purchases}</div>
           </div>
         </div>

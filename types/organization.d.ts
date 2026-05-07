@@ -151,6 +151,7 @@ export interface KycType {
   doc_front: string | null;
   doc_back: string | null;
   utility_doc: string | null;
+  facial_capture_url: string | null;
   location: string | null;
   state: string | null;
   city: string | null;
@@ -224,11 +225,14 @@ export interface Customer {
   phone: string | null;
   is_email_verified: boolean;
   is_phone_verified: boolean;
+  account_verified: boolean;
+  is_suspended: boolean;
   payments: Payment[];
   created_at: string; // ISO string
   updated_at: string; // ISO string
   role: Role;
   profile: Profile | null;
+  kyc_user: KycType[];
 }
 
 export interface Payment {
