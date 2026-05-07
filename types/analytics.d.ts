@@ -44,4 +44,15 @@ export interface ProductCount {
 export interface ProductCountResponse {
   statusCode: number;
   data: ProductCount;
+}    
+
+export interface ResourceCount {
+  affirmative: number;
+  library: number;
+  podcast: number;
+}
+
+export interface ResourceCountResponse {
+  statusCode: number;
+  data: ResourceCount;
 }

@@ -7,6 +7,8 @@ import {
   RevenueResponse,
   ProductCountResponse,
   ProductCount,
+  ResourceCountResponse,
+  ResourceCount,
 } from '@/types/analytics';
 
 interface AnalyticsState {
@@ -19,6 +21,9 @@ interface AnalyticsState {
   metricsError: string | null;
   revenueError: string | null;
   productCountError: string | null;
+  resourceCountLoading: boolean;
+  resourceCountError: string | null;
+  resourceCount: ResourceCount | null;
 }
 
 // Initial state
@@ -26,12 +31,15 @@ const initialState: AnalyticsState = {
   metrics: null,
   revenue: null,
   productCount: null,
+  resourceCount: null,
   metricsLoading: false,
   revenuesLoading: false,
   productCountLoading: false,
+  resourceCountLoading: false,
   metricsError: null,
   revenueError: null,
   productCountError: null,
+  resourceCountError: null,
 };
 
 // Async thunk to fetch metrics
@@ -88,6 +96,26 @@ export const fetchProductCount = createAsyncThunk(
   }
 );
 
+
+// Async thunk to fetch resource count
+export const fetchResourceCount = createAsyncThunk(
+  'owner-analytics/fetch-resource-count',
+  async () => {
+    const params: Record<string, any> = {};
+
+    const { data } = await api.get<ResourceCountResponse>(
+      '/owner-analytics/fetch-resource-count',
+      {
+        params,
+      }
+    );
+
+    return {
+      resource_count: data.data,
+    };
+  }
+);
+
 const analysisSlice = createSlice({
   name: 'analytics',
   initialState,
@@ -130,6 +158,19 @@ const analysisSlice = createSlice({
         state.productCountLoading = false;
         state.productCountError =
           action.error.message || 'Failed to fetch product count';
+      })
+      .addCase(fetchResourceCount.pending, (state) => {
+        state.resourceCountLoading = true;
+        state.resourceCountError = null;
+      })
+      .addCase(fetchResourceCount.fulfilled, (state, action) => {
+        state.resourceCountLoading = false;
+        state.resourceCount = action.payload.resource_count;
+      })
+      .addCase(fetchResourceCount.rejected, (state, action) => {
+        state.resourceCountLoading = false;
+        state.resourceCountError =
+          action.error.message || 'Failed to fetch resource count';
       });
   },
 });
