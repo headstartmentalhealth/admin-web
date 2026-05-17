@@ -78,7 +78,7 @@ const RecentNotifications = () => {
                 onClick={() => handleClickNotification(notification.id)}
                 className="flex items-start border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600 !text-left">
                 <Avatar
-                  img={notification.icon_url || '/favicon.ico'}
+                  img={'/favicon.ico'}
                   alt="Notification"
                   className="mr-3"
                 />
@@ -87,7 +87,7 @@ const RecentNotifications = () => {
                     <span className="font-semibold text-gray-900 dark:text-white">
                       {notification.title}
                     </span>{' '}
-                    – {notification.message}
+                    – <div dangerouslySetInnerHTML={{ __html: notification.message }} />
                   </div>
                   <div className="flex items-center gap-2 justify-between">
                     <div className="text-xs font-medium text-primary-600 dark:text-primary-500">

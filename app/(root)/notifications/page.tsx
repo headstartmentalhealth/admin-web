@@ -58,7 +58,7 @@ const NotificationPage = () => {
     return (
         <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
             <div className="section-container">
-                
+
                 <PageHeading
                     title="Notifications"
                     enableBreadCrumb={true}
@@ -148,7 +148,7 @@ const NotificationPage = () => {
                                     className="cursor-pointer flex items-start border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600 p-2"
                                 >
                                     <Avatar
-                                        img={notification.icon_url || '/favicon.ico'}
+                                        img={'/favicon.ico'}
                                         alt="Notification"
                                         className="mr-3"
                                     />
@@ -157,7 +157,7 @@ const NotificationPage = () => {
                                             <span className="font-semibold text-gray-900 dark:text-white">
                                                 {notification.title}
                                             </span>{' '}
-                                            – {notification.message}
+                                            – <div dangerouslySetInnerHTML={{ __html: notification.message }} />
                                         </div>
 
                                         <div className="flex items-center gap-2 justify-between">
