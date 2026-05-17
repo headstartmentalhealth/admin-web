@@ -235,7 +235,7 @@ const BlogPostManager = () => {
                         <div className="text-xs text-zinc-500 truncate max-w-[200px]">{post.slug}</div>
                       </td>
                       <td className="p-4">
-                        <span className="px-2 py-1 rounded-full text-xs bg-primary/10 text-primary font-medium">
+                        <span className="px-2 py-1 rounded-full text-xs bg-primary/10 text-gray-800 dark:text-white font-medium">
                           {post.category || 'General'}
                         </span>
                       </td>
@@ -255,7 +255,7 @@ const BlogPostManager = () => {
                       </td>
                       <td className="p-4 text-right space-x-2">
                         <Button variant="ghost" size="icon" onClick={() => handleOpenModal(post)}>
-                          <Edit2 className="w-4 h-4" />
+                          <Edit2 className="w-4 h-4 text-gray-800 dark:text-white" />
                         </Button>
                         <Button variant="ghost" size="icon" onClick={() => handleDelete(post.id)} className="text-rose-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10">
                           <Trash2 className="w-4 h-4" />
