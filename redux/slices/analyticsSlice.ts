@@ -11,6 +11,14 @@ import {
   ResourceCount,
 } from '@/types/analytics';
 
+interface ConnectionMetrics {
+  activeHttp: number;
+  activeWs: number;
+  totalHttp: number;
+  totalWs: number;
+  totalActive: number;
+}
+
 interface AnalyticsState {
   metrics: Metrics | null;
   revenue: RevenueReport | null;
@@ -24,6 +32,9 @@ interface AnalyticsState {
   resourceCountLoading: boolean;
   resourceCountError: string | null;
   resourceCount: ResourceCount | null;
+  connections: ConnectionMetrics | null;
+  connectionsLoading: boolean;
+  connectionsError: string | null;
 }
 
 // Initial state
@@ -32,14 +43,17 @@ const initialState: AnalyticsState = {
   revenue: null,
   productCount: null,
   resourceCount: null,
+  connections: null,
   metricsLoading: false,
   revenuesLoading: false,
   productCountLoading: false,
   resourceCountLoading: false,
+  connectionsLoading: false,
   metricsError: null,
   revenueError: null,
   productCountError: null,
   resourceCountError: null,
+  connectionsError: null,
 };
 
 // Async thunk to fetch metrics
@@ -116,6 +130,19 @@ export const fetchResourceCount = createAsyncThunk(
   }
 );
 
+// Async thunk to fetch connection metrics
+export const fetchConnections = createAsyncThunk(
+  'owner-analytics/fetch-connections',
+  async () => {
+    const { data } = await api.get<any>(
+      '/owner-analytics/fetch-connections'
+    );
+    return {
+      connections: data.data,
+    };
+  }
+);
+
 const analysisSlice = createSlice({
   name: 'analytics',
   initialState,
@@ -171,6 +198,19 @@ const analysisSlice = createSlice({
         state.resourceCountLoading = false;
         state.resourceCountError =
           action.error.message || 'Failed to fetch resource count';
+      })
+      .addCase(fetchConnections.pending, (state) => {
+        state.connectionsLoading = true;
+        state.connectionsError = null;
+      })
+      .addCase(fetchConnections.fulfilled, (state, action) => {
+        state.connectionsLoading = false;
+        state.connections = action.payload.connections;
+      })
+      .addCase(fetchConnections.rejected, (state, action) => {
+        state.connectionsLoading = false;
+        state.connectionsError =
+          action.error.message || 'Failed to fetch connection metrics';
       });
   },
 });
