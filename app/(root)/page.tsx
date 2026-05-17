@@ -127,7 +127,10 @@ const Home = () => {
                         <th scope='col' className='px-6 py-3'>Phone</th>
                         <th scope='col' className='px-6 py-3'>Role</th>
                         <th scope='col' className='px-6 py-3'>Country</th>
+                        <th scope='col' className='px-6 py-3'>Status</th>
                         <th scope='col' className='px-6 py-3'>Date Joined</th>
+                        <th scope='col' className='px-6 py-3'>Action</th>
+
                       </tr>
                     </thead>
                     <tbody>

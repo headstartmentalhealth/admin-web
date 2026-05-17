@@ -192,7 +192,7 @@ const UserDetailsPage = () => {
                       )}
                     </div>
                   </div>
-                  <div className='space-y-2'>
+                  {/* <div className='space-y-2'>
                     <p className='text-sm font-medium text-gray-500'>Utility Bill / Proof of Address</p>
                     <div className='relative aspect-[4/3] rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900'>
                       {latestKyc.utility_doc ? (
@@ -201,7 +201,7 @@ const UserDetailsPage = () => {
                         <div className='flex items-center justify-center h-full text-gray-400'>No Image</div>
                       )}
                     </div>
-                  </div>
+                  </div> */}
                   <div className='space-y-2'>
                     <p className='text-sm font-medium text-gray-500'>Facial Capture / Selfie</p>
                     <div className='relative aspect-[4/3] rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900'>
