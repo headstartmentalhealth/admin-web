@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { DM_Sans } from 'next/font/google';
+
 import './globals.css';
 import { ToastProvider } from '@/components/providers/toaster-provider';
 import { ConfettiProvider } from '@/components/providers/confetti-provider';
@@ -16,12 +16,6 @@ export const metadata: Metadata = {
   },
 };
 
-// Load DM Sans
-const dmSans = DM_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-dm-sans',
-});
 
 export default function RootLayout({
   children,
@@ -30,8 +24,8 @@ export default function RootLayout({
 }>) {
   return (
     <ReduxProvider>
-      <html lang='en' className={dmSans.variable} suppressHydrationWarning>
-        <body className={dmSans.className}>
+      <html lang='en' suppressHydrationWarning>
+        <body>
           <ConfettiProvider />
           <ToastProvider />
           <ThemeProvider

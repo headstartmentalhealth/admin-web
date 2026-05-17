@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -89,6 +89,11 @@ const InvitationContent = ({ invite }: { invite: any }) => (
 
 const JoinInvitationContent = () => {
   const { invite, loading, error, errorMsg } = useInvite();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   if (errorMsg || error) {
     return <ErrorView />;
@@ -97,14 +102,14 @@ const JoinInvitationContent = () => {
   return (
     <div className='min-h-screen flex flex-col justify-center items-center p-4 sm:p-6 bg-gradient-light text-black-1'>
       <Head>
-        <title>Join {invite?.business?.business_name || 'Organization'}</title>
+        <title>Join {mounted ? invite?.business?.business_name || 'Organization' : 'Organization'}</title>
       </Head>
 
       <div className='w-full max-w-2xl rounded-2xl bg-primary-light p-4 sm:p-8 md:p-10 my-4 sm:my-8 md:my-12'>
         <div className='w-full rounded-2xl p-6 sm:p-8 bg-white flex flex-col items-center justify-center'>
-          <Logo loading={loading} />
+          <Logo loading={!mounted || loading} />
 
-          {loading ? <LoadingView /> : <InvitationContent invite={invite} />}
+          {!mounted || loading ? <LoadingView /> : <InvitationContent invite={invite} />}
         </div>
       </div>
     </div>
