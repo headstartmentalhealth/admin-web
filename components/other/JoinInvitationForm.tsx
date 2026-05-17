@@ -39,12 +39,12 @@ const JoinInvitationForm = () => {
 
       if (acceptInvite.fulfilled.match(resultAction)) {
         // Redirect to sign in or dashboard after accepting
-        router.push('/auth/login');
+        router.push('/sign-in');
       } else {
         setError(
           (resultAction.payload as any)?.message ||
-            (resultAction.payload as string) ||
-            'Failed to accept invitation'
+          (resultAction.payload as string) ||
+          'Failed to accept invitation'
         );
       }
     } catch (err: any) {
