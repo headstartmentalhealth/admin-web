@@ -59,9 +59,9 @@ export const acceptInviteSchema = Joi.object({
   password: Joi.string().min(8).optional(),
 });
 export interface AcceptInviteProps {
-  name: string;
+  name?: string;
   token: string;
-  password: string;
+  password?: string;
 }
 
 export const resolveAccountFormSchema = Joi.object({

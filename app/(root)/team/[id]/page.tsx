@@ -209,7 +209,7 @@ const TeamMember = () => {
                 invite?.status === ContactInviteStatus.EXPIRED ? (
                 <Button
                   variant='outline'
-                  className='text-md flex p-2 px-4 gap-2 dark:text-white dark:hover:bg-white dark:hover:text-gray-800'
+                  className='text-md flex p-2 px-4 gap-2 border-gray-800 dark:border-white text-gray-800 dark:text-white dark:hover:bg-white dark:hover:text-gray-800'
                   onClick={() => setResendInviteOpenModal(true)}
                   disabled={isSubmitting}
                 >
