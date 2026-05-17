@@ -41,6 +41,7 @@ const useInstantNotification = ({
       fetchInstant({
         page: currentPage,
         limit: perPage,
+        type: initialType,
         ...(q && { q }),
         ...(startDate && { startDate }),
         ...(endDate && { endDate }),

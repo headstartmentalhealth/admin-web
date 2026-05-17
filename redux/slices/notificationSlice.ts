@@ -68,12 +68,14 @@ export const fetchInstant = createAsyncThunk(
     {
       page,
       limit,
+      type,
       q,
       startDate,
       endDate,
     }: {
       page?: number;
       limit?: number;
+      type?: string
       q?: string;
       startDate?: string;
       endDate?: string;
@@ -87,6 +89,7 @@ export const fetchInstant = createAsyncThunk(
     if (q !== undefined) params['q'] = q;
     if (startDate !== undefined) params['startDate'] = startDate;
     if (endDate !== undefined) params['endDate'] = endDate;
+    if (type !== undefined) params['type'] = type;
 
     try {
       const { data } = await api.get<InstantNotificationResponse>(

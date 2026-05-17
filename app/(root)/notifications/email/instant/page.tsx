@@ -6,7 +6,7 @@ import Filter from '@/components/Filter';
 import NotificationStatus from '@/components/notifications/Status';
 import Link from 'next/link';
 import { HiPlus } from 'react-icons/hi';
-import { NotificationKind } from '@/lib/utils';
+import { NotificationKind, NotificationType } from '@/lib/utils';
 import useNotification from '@/hooks/page/useInstantNotification';
 import { useSearchParams } from 'next/navigation';
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
@@ -27,7 +27,7 @@ const InstantEmailNotification = () => {
     handleSearchSubmit,
     handleFilterByDateSubmit,
     handleRefresh,
-  } = useNotification();
+  } = useNotification({ initialType: NotificationType.EMAIL });
 
   return (
     <main>
