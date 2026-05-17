@@ -22,7 +22,7 @@ const Home = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { metrics, metricsLoading } = useMetrics();
-  const { connections, connectionsLoading } = useConnections(true, 3000);
+  const { connections, connectionsLoading } = useConnections(true, 36000);
   const { resourceCount, resourceCountLoading } = useResourceCount();
   const { organizations: orgs, loading: orgLoading } = useOrgs();
   const { organization: org } = useSelector((state: RootState) => state.organization);

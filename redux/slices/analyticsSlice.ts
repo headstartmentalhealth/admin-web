@@ -146,7 +146,11 @@ export const fetchConnections = createAsyncThunk(
 const analysisSlice = createSlice({
   name: 'analytics',
   initialState,
-  reducers: {},
+  reducers: {
+    setConnections: (state, action) => {
+      state.connections = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchMetrics.pending, (state) => {
@@ -215,4 +219,5 @@ const analysisSlice = createSlice({
   },
 });
 
+export const { setConnections } = analysisSlice.actions;
 export default analysisSlice.reducer;
