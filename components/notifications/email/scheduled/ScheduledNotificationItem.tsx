@@ -28,10 +28,10 @@ const ScheduledNotificationItem = ({
   const sender = notification.owner
     ? `${notification.owner?.name} (${shortenId(notification.owner?.id!)})`
     : notification.business
-    ? `${notification.business?.business_name} (${shortenId(
+      ? `${notification.business?.business_name} (${shortenId(
         notification.business?.id!
       )})`
-    : 'N/A';
+      : 'N/A';
 
   const status = notification.schedule_info?.status;
 
@@ -67,13 +67,13 @@ const ScheduledNotificationItem = ({
         {moment(notification.created_at).format('MMMM D, YYYY')}
       </td>
 
-      <td className='flex px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white font-bold'>
+      {/* <td className='flex px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white font-bold'>
         <ActionDropdown
           id={notification.id}
           status={notification.schedule_info?.status.toLocaleLowerCase() as any}
           notificationType={notification.type}
         />
-      </td>
+      </td> */}
 
       {/* Notification Details Drawer */}
       <Drawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>

@@ -14,14 +14,19 @@ export default function RootLayout({
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { token } = useSelector((state: RootState) => state.auth);
+  const [mounted, setMounted] = React.useState(false);
 
   useEffect(() => {
-    if (!token) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && !token) {
       router.push('/sign-in');
     }
-  }, [token, router]);
+  }, [mounted, token, router]);
 
-  if (!token) return null;
+  if (!mounted || !token) return null;
 
   return (
     <main className='flex h-screen w-full font-inter'>

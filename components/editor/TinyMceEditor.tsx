@@ -34,19 +34,17 @@ const TinyMceEditor = ({
 
   const additional_css =
     isEmailTemplate &&
-    `background: url("${organization?.logo_url || '/default-logo.png'
-    }") no-repeat center;
-  background-size: 70px auto;
+    `background: url("${organization?.logo_url || '/logo.png'}") no-repeat center;
+  background-size: 150px auto;
   padding: 10px;
-  background-size: 70px auto;
-  height: 70px;
+  height: 120px;
   margin-bottom: 20px;`;
 
   return (
     <>
       <Editor
         key={theme} // forces re-init when theme changes
-        apiKey={process.env.NEXT_PUBLIC_TINY_MCE_KEY}
+        apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
         value={value}
         onEditorChange={onChange}
         init={{

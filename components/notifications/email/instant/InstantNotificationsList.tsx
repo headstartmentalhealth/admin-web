@@ -59,9 +59,9 @@ const InstantNotificationsList = ({
               />
             ))}
 
-            {!notifications.length && (
+            {/* {!notifications.length && (
               <TableEndRecord colspan={8} text={noFoundText} />
-            )}
+            )} */}
           </tbody>
         </table>
         {/* Pagination */}

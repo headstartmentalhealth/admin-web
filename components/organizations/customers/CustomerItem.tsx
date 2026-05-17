@@ -11,6 +11,7 @@ import moment from 'moment-timezone';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
+import SuspendUnsuspendUser from './SuspendUnsuspendUser';
 
 interface CustomerItemProps {
   customer: Customer;
@@ -116,7 +117,26 @@ const CustomerItem = ({ customer }: CustomerItemProps) => {
           {customer.profile?.country_code || 'N/A'}
         </td>
         <td className='px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white font-bold'>
+          <span
+            className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium capitalize ${
+              customer.is_suspended
+                ? 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300'
+                : 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
+            }`}
+          >
+            <span
+              className={`w-1.5 h-1.5 mr-1.5 rounded-full ${
+                customer.is_suspended ? 'bg-red-500' : 'bg-green-500'
+              }`}
+            />
+            {customer.is_suspended ? 'Suspended' : 'Active'}
+          </span>
+        </td>
+        <td className='px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white font-bold'>
           {moment(customer.created_at).format('MMM D, YYYY')}
+        </td>
+        <td className='px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white font-bold'>
+          <SuspendUnsuspendUser user={customer} />
         </td>
       </tr>
 

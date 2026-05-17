@@ -305,7 +305,7 @@ export const fetchCustomers = createAsyncThunk(
 
 // Async thunk to suspend organization account
 export const suspendOrgAccount = createAsyncThunk(
-  `onboard/suspend-business-owner/:id`,
+  `onboard/suspend-user/:id`,
   async (
     {
       user_id,
@@ -318,7 +318,7 @@ export const suspendOrgAccount = createAsyncThunk(
   ) => {
     try {
       const { data } = await api.post<GenericResponse>(
-        `/onboard/suspend-business-owner/${user_id}`,
+        `/onboard/suspend-user/${user_id}`,
         {
           suspension_reason,
         }
@@ -332,7 +332,7 @@ export const suspendOrgAccount = createAsyncThunk(
 
       return rejectWithValue(
         error.response?.data?.message ||
-        "Failed to suspend business owner's account"
+        "Failed to suspend user's account"
       );
     }
   }
@@ -340,7 +340,7 @@ export const suspendOrgAccount = createAsyncThunk(
 
 // Async thunk to unsuspend organization account
 export const unsuspendOrgAccount = createAsyncThunk(
-  `onboard/unsuspend-business-owner/:id`,
+  `onboard/unsuspend-user/:id`,
   async (
     {
       user_id,
@@ -351,7 +351,7 @@ export const unsuspendOrgAccount = createAsyncThunk(
   ) => {
     try {
       const { data } = await api.put<GenericResponse>(
-        `/onboard/unsuspend-business-owner/${user_id}`
+        `/onboard/unsuspend-user/${user_id}`
       );
 
       return {
@@ -362,7 +362,7 @@ export const unsuspendOrgAccount = createAsyncThunk(
 
       return rejectWithValue(
         error.response?.data?.message ||
-        "Failed to unsuspend business owner's account"
+        "Failed to unsuspend user's account"
       );
     }
   }

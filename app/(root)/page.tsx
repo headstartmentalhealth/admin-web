@@ -73,7 +73,7 @@ const Home = () => {
             {[
               { label: 'Registered Users', value: metrics?.total_organizations },
               { label: 'Library Materials', value: metrics?.total_library_materials || 0 },
-              { label: 'Audio Contents', value: metrics?.total_audio_contents || 0 },
+              { label: 'Affirmatives', value: metrics?.total_affirmative_contents || 0 },
               { label: 'Blog Posts', value: metrics?.total_blog_posts || 0 },
             ].map((stat, index) => (
               <div key={index} className='bg-white dark:bg-gray-800 p-4 rounded-md shadow-md'>

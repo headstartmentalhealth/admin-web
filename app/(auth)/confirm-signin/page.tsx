@@ -35,8 +35,8 @@ const ConfirmSignInContent = () => {
         />
       </a>
       {/* <!-- Card --> */}
-      <div className='w-full max-w-md p-6 space-y-8 sm:p-8 rounded-lg shadow dark:bg-gray-800 bg-white'>
-        <h2 className='text-2xl font-bold text-gray-900 dark:text-white'>
+      <div className='w-full max-w-md p-6 space-y-8 sm:p-8 rounded-lg shadow dark:bg-gray-800 bg-white text-gray-900 dark:text-black'>
+        <h2 className='text-2xl font-bold '>
           Verify your Signin
         </h2>
         <p>

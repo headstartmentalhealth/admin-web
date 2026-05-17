@@ -12,8 +12,8 @@ export const TokenValidator = () => {
     const checkToken = async () => {
       const token = Cookies.get('token');
       
-      // Don't check if we're already on the signin page or if there's no token
-      if (pathname.includes('/signin') || !token) {
+      // Don't check if we're already on the sign-in page or if there's no token
+      if (pathname.includes('/sign-in') || !token) {
         return;
       }
 

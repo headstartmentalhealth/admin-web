@@ -22,8 +22,8 @@ api.interceptors.response.use(
       if (typeof window !== 'undefined') {
         Cookies.remove('token');
         // Redirect to signin if not already there
-        if (!window.location.pathname.includes('/signin')) {
-          window.location.href = '/signin';
+        if (!window.location.pathname.includes('/sign-in')) {
+          window.location.href = '/sign-in';
         }
       }
     }

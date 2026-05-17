@@ -55,7 +55,13 @@ const CustomersList = ({
                 Country
               </th>
               <th scope='col' className='px-6 py-3'>
+                Status
+              </th>
+              <th scope='col' className='px-6 py-3'>
                 Date Joined
+              </th>
+              <th scope='col' className='px-6 py-3'>
+                Actions
               </th>
             </tr>
           </thead>
@@ -65,7 +71,7 @@ const CustomersList = ({
             ))}
 
             {!customers.length && (
-              <TableEndRecord colspan={8} text={noFoundText} />
+              <TableEndRecord colspan={9} text={noFoundText} />
             )}
           </tbody>
         </table>

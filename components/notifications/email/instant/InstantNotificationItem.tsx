@@ -25,10 +25,10 @@ const InstantNotificationItem = ({
   const sender = notification.owner
     ? `${notification.owner?.name} (${shortenId(notification.owner?.id!)})`
     : notification.business
-    ? `${notification.business?.business_name} (${shortenId(
+      ? `${notification.business?.business_name} (${shortenId(
         notification.business?.id!
       )})`
-    : 'N/A';
+      : 'N/A';
 
   const status = notification.status
     ? NOTIFICATION_STATUS.DELIVERED
@@ -58,13 +58,13 @@ const InstantNotificationItem = ({
         {moment(notification.created_at).format('MMMM D, YYYY')}
       </td>
 
-      <td className='flex px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white font-bold'>
+      {/* <td className='flex px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white font-bold'>
         <ActionDropdown
           id={notification.id}
           status={status}
           notificationType={notification.type}
         />
-      </td>
+      </td> */}
 
       {/* Notification Details Drawer */}
       <Drawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>

@@ -150,12 +150,12 @@ export const sidebarLinks = [
       },
     ],
   },
-  {
-    icon: IoIosFilm,
-    route: '/media-library',
-    label: 'Media Library',
-    group: groups.TWO,
-  },
+  // {
+  //   icon: IoIosFilm,
+  //   route: '/media-library',
+  //   label: 'Media Library',
+  //   group: groups.TWO,
+  // },
   {
     icon: IoIosCog,
     route: '/settings',

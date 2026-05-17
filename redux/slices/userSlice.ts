@@ -120,6 +120,41 @@ export const reviewKycAction = createAsyncThunk(
   }
 );
 
+// Async thunk to suspend user
+export const suspendUserAction = createAsyncThunk(
+  'users/suspendUser',
+  async (
+    { user_id, suspension_reason }: { user_id: string; suspension_reason: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const { data } = await api.post(`/onboard/suspend-user/${user_id}`, {
+        suspension_reason,
+      });
+      return { user_id, data };
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to suspend user'
+      );
+    }
+  }
+);
+
+// Async thunk to unsuspend user
+export const unsuspendUserAction = createAsyncThunk(
+  'users/unsuspendUser',
+  async (user_id: string, { rejectWithValue }) => {
+    try {
+      const { data } = await api.put(`/onboard/unsuspend-user/${user_id}`);
+      return { user_id, data };
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to unsuspend user'
+      );
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: 'users',
   initialState,
@@ -162,6 +197,24 @@ const userSlice = createSlice({
       .addCase(fetchUserDetail.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(suspendUserAction.fulfilled, (state, action) => {
+        const index = state.users.findIndex((u) => u.id === action.payload.user_id);
+        if (index !== -1) {
+          state.users[index].is_suspended = true;
+        }
+        if (state.selectedUser && state.selectedUser.id === action.payload.user_id) {
+          state.selectedUser.is_suspended = true;
+        }
+      })
+      .addCase(unsuspendUserAction.fulfilled, (state, action) => {
+        const index = state.users.findIndex((u) => u.id === action.payload.user_id);
+        if (index !== -1) {
+          state.users[index].is_suspended = false;
+        }
+        if (state.selectedUser && state.selectedUser.id === action.payload.user_id) {
+          state.selectedUser.is_suspended = false;
+        }
       });
   },
 });

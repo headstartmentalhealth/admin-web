@@ -30,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <ReduxProvider>
-      <html lang='en' className={dmSans.variable}>
+      <html lang='en' className={dmSans.variable} suppressHydrationWarning>
         <body className={dmSans.className}>
           <ConfettiProvider />
           <ToastProvider />

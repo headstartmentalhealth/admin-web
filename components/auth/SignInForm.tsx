@@ -64,7 +64,7 @@ const ConfirmSignInForm = () => {
         <div>
           <label
             htmlFor='email'
-            className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
+            className='block mb-2 text-sm font-medium text-gray-900 dark:text-white text-gray-900 dark:text-black'
           >
             Email address
           </label>
